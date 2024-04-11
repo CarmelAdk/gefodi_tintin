@@ -1,0 +1,54 @@
+{% extends "login_layout.html" %}
+{% load static %}
+
+{% block title %} GEFODI - Déconnexion{% endblock %}
+{% block content %}
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <div class="container">
+        <div class="row flex-center min-vh-100 py-5">
+            <div class="col-sm-10 col-md-8 col-lg-5 col-xl-6 col-xxl-4">
+                <div class="text-center mb-6 mx-auto"><img class="mb-7 d-dark-none"
+                        src="{% static 'images/spot-illustrations/1.png' %}" alt="gefodi" /><img
+                        class="mb-7 d-light-none" src="{% static 'images/spot-illustrations/dark_1.png' %}"
+                        alt="gefodi" />
+                    <div class="mb-6">
+                        <h4 class="text-body-highlight">Revenez bientôt!</h4>
+                        <p class="text-body-tertiary">Merci d'utiliser GEFODI. <br class="d-lg-none" />Vous êtes
+                            maintenant déconnecté avec succès.</p>
+                    </div>
+                    <div class="d-grid">
+                        <p id="countdown">Redirection dans 3 secondes...</p>
+                        <a class="btn btn-primary" href="{% url 'login' %}"><span
+                                class="fas fa-angle-left me-2"></span>Aller à la page de connexion</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- ===============================================-->
+<!--    End of Main Content-->
+<!-- ===============================================-->
+
+{% endblock content %}
+
+{% block javascript %}
+
+<script>
+    var seconds_before_redirection = 3;
+    function countdown() {
+      document.getElementById('countdown').innerHTML = 'Redirection dans ' + seconds_before_redirection + ' secondes...';
+      if (seconds_before_redirection === 0) {
+        window.location.href = "{% url 'login' %}";
+      } else {
+        seconds_before_redirection--;
+        setTimeout(countdown, 1000);
+      }
+    }
+    countdown();
+  </script>
+
+{% endblock javascript %}

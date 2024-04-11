@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}GEFODI - Statuts{% endblock title%}
+
+{% block fil_ariane %} 
+    <li class="breadcrumb-item">Mes Statuts</li>
+{% endblock fil_ariane %}
+
+{% block content %}
+<div class="card shadow-none border my-4" data-component-card="data-component-card">
+
+    <div class="card-header p-4 border-bottom bg-body">
+        <div class="row g-3 justify-content-between align-items-center">
+            <div class="col-12 col-md">
+                <h2 class="text-body mb-0" id="company_create">Statut d'Entreprise</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-4">
+        <div class="row align-items-center justify-content-between g-3 mb-4">
+            <div class="col-auto"></div>
+        </div> 
+        <div class="row g-3 mb-6">
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="border-bottom border-dashed">
+                            <h4 class="mb-3 text-warning">Ajouter un Statut <span data-feather="plus-circle"></span></h4>
+                        </div>
+                        <div class="border-bottom border-dashed pb-4">
+                            <form method="post">
+                                {% csrf_token %}
+
+                                <div class="row">
+                                    <div class="col-md-6 mt-3">
+                                        <span class="text-danger">* </span>{{ form.status_name.label_tag }}
+                                        {{ form.status_name }}
+                                        {% if form.status_name.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.status_name.errors %}
+                                                    <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <span class="text-danger">* </span>{{ form.short_name.label_tag }}
+                                        {{ form.short_name }}
+                                        {% if form.short_name.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.short_name.errors %}
+                                                    <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mt-3">
+                                        {{ form.description.label_tag }}
+                                        {{ form.description }}
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-5" id="submit-btn">Enregistrer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="border-bottom border-dashed">
+                            <h4 class="mb-3 text-secondary">Liste des Statuts <span data-feather="info"></span><button class="btn btn-link p-0" type="button"></button></h4>
+                        </div>
+                        <div class="table-responsive mt-3">
+                            <table class="table table-bordered table-sm fs-9 mb-0">
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th class="sort border-top border-translucent ps-3" data-sort="status_name">Statuts</th>
+                                        <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="short_name">Acronyme</th>
+                                        <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="description">Description</th>
+                                        <th class="sort text-center align-middle pe-0 border-top border-translucent" scope="col"><span class="text-primary" data-feather="settings"></span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list">
+                                    {% for company_status in companies_status %}
+                                    <tr>
+                                        <td class="align-middle ps-3 status_name">{{ company_status.status_name }}</td>
+                                        <td class="align-middle short_name d-none d-sm-table-cell">{{ company_status.short_name }}</td>
+                                        <td class="align-middle description d-none d-sm-table-cell">{{ company_status.description }}</td>
+                                        <td class="align-middle white-space-nowrap text-end pe-0">
+                                            <div class="btn-reveal-trigger position-static">
+                                                <div class="text-center">
+                                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                        <svg class="svg-inline--fa fa-ellipsis fs-10" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M120 256C120 286.9 94.93 312 64 312C33.07 312 8 286.9 8 256C8 225.1 33.07 200 64 200C94.93 200 120 225.1 120 256zM280 256C280 286.9 254.9 312 224 312C193.1 312 168 286.9 168 256C168 225.1 193.1 200 224 200C254.9 200 280 225.1 280 256zM328 256C328 225.1 353.1 200 384 200C414.9 200 440 225.1 440 256C440 286.9 414.9 312 384 312C353.1 312 328 286.9 328 256z"></path></svg>
+                                                    </button>
+
+                                                    <div class="dropdown-menu dropdown-menu-end py-2">
+                                                        <a class="dropdown-item text-primary" href="{% url 'company_status_update' company_status_id=company_status.id company_status_slug=company_status.slug %}"><span data-feather="edit"></span>  Modifier</a>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ company_status.id }}" href="#"><strong><span data-feather="delete"></span>  Supprimer</strong></a>
+                                                    </div>
+                                                </div>    
+
+                                                <!-- Modal DELETE -->
+                                                <div class="modal fade" id="deleteModal{{ company_status.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ company_status.id }}" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered"> 
+                                                        <div class="modal-content" style="max-width: 600px;"> 
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="deleteModalLabel{{ company_status.id }}">SUPPRESSION</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body" style="text-align: left;">
+                                                                <h5>Êtes-vous sûr de vouloir supprimer l'entreprise :<br><br> <span>{{ company_status.status_name }}</span> ?</h5>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                                                                <a href="{% url 'company_status_delete' company_status_id=company_status.id %}" class="btn btn-danger">Oui</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if not companies_status %}
+                            <h5 class="text-center mt-5">⚠️ Pas de Liste de Statuts pour le moment</h5>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+

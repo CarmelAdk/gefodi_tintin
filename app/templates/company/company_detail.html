@@ -1,0 +1,195 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}GEFODI - Détail Entreprise{% endblock title%}
+
+{% block fil_ariane %} 
+  <li class="breadcrumb-item"><a href="{% url 'company_list' %}">Liste des entreprises</a></li>
+  <li class="breadcrumb-item">Détail</li>
+{% endblock fil_ariane %}
+
+{% block css %}
+<style>
+  .initial-letter-logo {
+      width: 150px; 
+      height: 150px; 
+      color: white; 
+      text-align: center; 
+      line-height: 150px; 
+      font-size: 50px; 
+      font-weight: bold; 
+      border-radius: 5px; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      background: linear-gradient(to bottom, #2c2a66, #3895d3); 
+  }
+
+  @media screen and (max-width: 576px) {
+    .initial-letter-logo {
+      font-size: 30px; 
+      line-height: 100px;
+    }
+  }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="row g-3 justify-content-between align-items-center mt-5 mb-3">
+    <div class="col-md-6">
+        <h3 class="text-body mb-0" id="company_create">DETAIL DE L'ENTREPRISE</h3>
+    </div>
+    <div class="col-md-3">
+        <nav class="nav justify-content-end doc-tab-nav align-items-center" role="tablist">
+            <a class="btn btn-sm text-white preview-btn ms-2 bg-secondary" href="{% url 'company_list' %}">
+                <span data-feather="list"></span>  Voir la liste
+            </a>
+        </nav>
+    </div>
+</div>
+
+<div class="card shadow-none border my-4" data-component-card="data-component-card">
+  <div class="card-body p-4">
+      <div class="row align-items-center justify-content-between g-3 mb-4">
+        <div class="col-auto"></div>
+          <div class="col-auto">
+            <div class="row g-2 g-sm-3">
+              <div class="col-auto"><a class="btn btn-phoenix-danger dropdown-item text-primary" href="{% url 'company_update' company_id=company.id company_slug=company.slug %}"><span data-feather="edit"></span>  Modifier</a></div>
+              <div class="col-auto"><a class="btn btn-phoenix-danger dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ company.id }}" href="#"><strong><span data-feather="delete"></span>  Supprimer</strong></a></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal DELETE -->
+        <div class="modal fade" id="deleteModal{{ company.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ company.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content" style="max-width: 600px;">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="deleteModalLabel{{ company.id }}">SUPPRESSION</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <h5>Êtes-vous sûr de vouloir supprimer l'entreprise :<br><br> <span>{{ company.name }}</span> ?</h5>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                      <a href="{% url 'company_delete' company_id=company.id %}" class="btn btn-danger">Oui</a>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+      <div class="row g-3 mb-6">
+        <div class="col-12 col-lg-8">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="border-bottom border-dashed pb-4">
+                <div class="row align-items-center g-3 g-sm-5 text-center text-sm-start mb-3">
+                  <div class="col-12 col-sm-auto"><input class="d-none" id="avatarFile" type="file"><label class="cursor-pointer avatar avatar-5xl" for="avatarFile">
+                    {% if company.logotype %}
+                      <!-- Si l'entreprise a un logo, affichez le logo -->
+                      <img src="{{ company.logotype.url }}" alt="Logo de l'entreprise" style="width: 150px; height: auto;">
+                    {% else %}
+                      <!-- Si l'entreprise n'a pas de logo, affichez la première lettre du nom dans un carré coloré -->
+                      <div class="initial-letter-logo">{{ company.name|slice:":1" }}</div>
+                    {% endif %}
+                  </label></div>
+                  <div class="col-12 col-sm-auto flex-1">
+                    <h3>{{ company.name }}</h3>
+                    <p class="text-body-secondary">-----------</p>
+                    <div>
+                      <p>{{ company.address }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-between-center pt-4">
+                <div class="d-none d-sm-block">
+                  <h6 class="mb-2 text-body-secondary">Capital</h6>
+                  <h6 class="fs-7 text-body-highlight mb-0">{{ company.capital }} €</h6>
+                </div>
+                <div class="text-end">
+                  <h6 class="mb-2 text-body-secondary">Type d'entreprise</h6>
+                  <h4 class="fs-7 text-body-highlight mb-0">{{ company.status.short_name }}</h4>
+                </div>
+                <div class="text-end">
+                  <h6 class="mb-2 text-body-secondary">Nombre d'employés</h6>
+                  <h4 class="fs-7 text-body-highlight mb-0">{{ company.nb_employees }} </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="border-bottom border-dashed">
+                <h4 class="mb-3">Autres informations <span data-feather="info"></span><button class="btn btn-link p-0" type="button"></button></h4>
+              </div>
+              <div class="pt-4 mb-7 mb-lg-4 mb-xl-7">
+                {% if company.acronym %}
+                <div class="row justify-content-between">
+                  <div class="col-auto">
+                    <h5 class="text-body-highlight">
+                        Acronyme
+                    </h5>
+                  </div>
+                  <div class="col-auto">
+                    <p class="text-body-secondary">
+                        {{ company.acronym }}
+                    </p>
+                  </div>
+                </div>
+                {% endif %}
+                {% if company.email %}
+                <div class="row justify-content-between">
+                  <div class="col-auto">
+                    <h5 class="text-body-highlight">
+                        Email
+                    </h5>
+                  </div>
+                  <div class="col-auto">
+                    <p class="text-body-secondary">
+                        {{ company.email }}
+                    </p>
+                  </div>
+                </div>
+                {% endif %}
+                {% if company.phone %}
+                <div class="row justify-content-between">
+                  <div class="col-auto">
+                    <h5 class="text-body-highlight">
+                        Téléphone
+                    </h5>
+                  </div>
+                  <div class="col-auto">
+                    <p class="text-body-secondary">
+                        {{ company.phone }}
+                    </p>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              {% if company.phone or company.email or company.acronym %}
+                <div class="border-top border-dashed pt-4">
+              {% endif %}
+                <div class="row flex-between-center mb-2">
+                  <div class="col-auto">
+                    <h5 class="text-body-highlight mb-0">NAF/APE </h5>
+                  </div>
+                  <div class="col-auto">{{ company.naf_ape }}</div>
+                </div>
+                <div class="row flex-between-center">
+                  <div class="col-auto">
+                    <h5 class="text-body-highlight mb-0">SIRET </h5>
+                  </div>
+                  <div class="col-auto">{{ company.siret }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+{% endblock %}

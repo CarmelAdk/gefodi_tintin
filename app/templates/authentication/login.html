@@ -1,0 +1,133 @@
+{% extends "login_layout.html" %}
+{% load static %}
+
+{% block title %} GEFODI - Authentification{% endblock %}
+{% block content %}
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <div class="container">
+        <div class="row flex-center min-vh-100 py-5">
+            <div class="col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-3"><a
+                    class="d-flex flex-center text-decoration-none mb-4" href="{% url 'login' %}">
+                    <div class="d-flex align-items-center fw-bolder fs-3 d-inline-block"><img
+                            src="{% static 'images/icons/logo-gefodi.png' %}" alt="gefodi" width="150" />
+                    </div>
+                </a>
+                <div class="text-center mb-7">
+                    <h3 class="text-body-highlight">Connexion</h3>
+                    <p class="text-body-tertiary">Accédez à votre compte</p>
+                </div>
+                <button class="btn btn-phoenix-secondary w-100 mb-3"><span
+                        class="fab fa-google text-danger me-2 fs-9"></span>Se connecter avec google</button>
+                <button class="btn btn-phoenix-secondary w-100"><span
+                        class="fab fa-facebook text-primary me-2 fs-9"></span>Se connecter avec facebook</button>
+                <div class="position-relative">
+                    <hr class="bg-body-secondary mt-5 mb-4" />
+                    <div class="divider-content-center">ou utilisez un e-mail</div>
+                </div>
+
+                {% if messages %}
+                <div>
+                    {% for message in messages %}
+                    {% if 'success' in message.tags %}
+                    <div class="alert alert-success text-justify" role="alert"><span
+                            class="far fa-check-circle form-icon fs-12"></span> {{ message|safe }}</div>
+                    {% elif 'error' in message.tags %}
+                    <div class="alert alert-warning text-justify" role="alert"><span
+                            class="fab fa-adobe form-icon fs-12"></span> {{ message|safe }}</div>
+                    {% else %}
+                    <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message|safe }}</div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <label class="" for="email">
+                        <span class="text-danger">*</span></label> {{ form.email.label }}
+                    <div class="form-icon-container">
+                        {{form.email}}
+                        <span class="fas fa-user text-body fs-9 form-icon"></span>
+                        <div class="invalid-feedback">Le format de l'adresse e-mail n'est pas valide. Veuillez saisir
+                            une adresse e-mail conforme, par exemple : nom@example.com</div>
+                    </div>
+                    {% if message %}
+                    <div class="text-danger text-justify" style="font-size: 12px;">
+                        <span class="fab fa-adobe form-icon fs-12"></span>
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    <div class="mb-3 text-start">
+                        <label class="" for="password">
+                            <span class="text-danger">*</span></label> {{ form.password.label }}
+                        <div class="form-icon-container">
+                            {{ form.password }}
+                            <span class="fas fa-key text-body fs-9 form-icon"></span>
+                        </div>
+                        {% if message %}
+                        <div class="text-danger text-justify" style="font-size: 12px;">
+                            <span class="fab fa-adobe form-icon fs-12"></span>
+                            {{ message }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row flex-between-center mb-7">
+                        <div class="col-auto">
+                            <div class="form-check mb-0">
+                                {{ form.remember_me }}
+                                <label class="form-check-label mb-0"
+                                    for="basic-checkbox">{{ form.remember_me.label }}</label>
+                            </div>
+                        </div>
+                        <div class="col-auto"><a class="fs-9 fw-semibold" href="{% url 'forgot_password' %}">Mot de
+                                passe oublié ?</a></div>
+                    </div>
+
+                    <div id="recaptcha"></div>
+
+                    <button class="btn btn-primary w-100 mb-3" id="login-btn" disabled>Connexion</button>
+
+                </form>
+                <div class="text-center"><a class="fs-9 fw-bold" href="{% url 'signup' %}">Créer un compte</a></div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- ===============================================-->
+<!--    End of Main Content-->
+<!-- ===============================================-->
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_public_key }}"></script>
+<script> var recaptcha_public_key = "{{ recaptcha_public_key }}"; </script>
+<script src="{% static 'js/recaptcha.js' %}"></script>
+
+<script>
+    // Enable/disable the button based on form field content
+    $(document).ready(function () {
+        $('input, select').on('input', function () {
+            var formIsEmpty = $('form').find('input, select').filter(function () {
+                return $.trim(this.value) === '';
+            }).length > 0;
+
+            // Enable/disable the button based on conditions
+            $('#login-btn').prop('disabled', formIsEmpty);
+        });
+
+        // Handle initial state on page load
+        $(window).on('load', function () {
+            // Trigger input event to check the initial state
+            $('input, select').trigger('input');
+        });
+    });
+</script>
+
+{% endblock javascript %}

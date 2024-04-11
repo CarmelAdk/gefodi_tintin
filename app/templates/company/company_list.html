@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}GEFODI - Liste Entreprises{% endblock title%}
+
+{% block fil_ariane %} 
+    <li class="breadcrumb-item">Liste des entreprises</li>
+{% endblock fil_ariane %}
+
+{% block css %}
+<style>
+    .initial-letter-logo {
+        width: 50px; 
+        height: 50px; 
+        color: white; 
+        text-align: center; 
+        line-height: 50px; 
+        font-size: 24px; 
+        font-weight: bold; 
+        border-radius: 5px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        background: linear-gradient(to bottom, #2c2a66, #3895d3); 
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="row g-3 justify-content-between align-items-center mt-5">
+    <div class="col-md-6">
+        <h3 class="text-body mb-0" id="company_create">ENTREPRISES</h3>
+    </div>
+</div>
+<div class="row g-3 justify-content-between align-items-center mt-2">
+    <h2 class="col-md-3 mt-5">
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="🔍 Rechercher par page...">
+    </h2>
+    <div class="col-md-3">
+        <nav class="nav justify-content-end doc-tab-nav align-items-center" role="tablist">
+            <a class="btn btn-sm text-white preview-btn ms-2 bg-primary" href="{% url 'company' %}"><span data-feather="plus-circle"></span>  Ajouter
+            </a>
+        </nav>
+    </div>
+</div>
+
+<div class="card shadow-none border" data-component-card="data-component-card">
+
+    <div class="card-body p-4">
+        <div id="tableList">
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm fs-9 mb-0">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="sort border-top border-translucent ps-3" data-sort="name">NOM</th>
+                            <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="siret">SIRET</th>
+                            <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="capital">CAPITAL</th>
+                            <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="address">ADRESSE</th>
+                            <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="naf_ape">NAF/APE</th>
+                            <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="company_type">TYPE</th>
+                            <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="nb_employees">EMPLOYES</th>
+                            <th class="sort border-top border-translucent d-none d-sm-table-cell text-center" data-sort="logotype">LOGOTYPE</th>
+                            <th class="sort text-center align-middle pe-0 border-top border-translucent" scope="col"><span class="text-primary" data-feather="settings"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        {% for company in companies %}
+                        <tr>
+                            <td class="align-middle ps-3 name">{{ company.name }}</td>
+                            <td class="align-middle siret d-none d-sm-table-cell">{{ company.siret }}</td>
+                            <td class="align-middle capital d-none d-sm-table-cell">{{ company.capital }}</td>
+                            <td class="align-middle address d-none d-sm-table-cell">{{ company.address }}</td>
+                            <td class="align-middle naf_ape d-none d-sm-table-cell">{{ company.naf_ape }}</td>
+                            <td class="align-middle company_type d-none d-sm-table-cell">{{ company.status.short_name }}</td>
+                            <td class="align-middle nb_employees d-none d-sm-table-cell">{{ company.nb_employees }}</td>
+                            <td class="align-middle logotype d-none d-sm-table-cell text-center">
+                                {% if company.logotype %}
+                                    <!-- Si l'entreprise a un logo, affichez le logo -->
+                                    <img src="{{ company.logotype.url }}" alt="Logo de l'entreprise" style="max-height: 50px;">
+                                {% else %}
+                                    <!-- Si l'entreprise n'a pas de logo, affichez la première lettre du nom dans un carré coloré -->
+                                    <span class="initial-letter-logo mx-auto">{{ company.name|slice:":1" }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle white-space-nowrap text-end pe-0">
+                                <div class="btn-reveal-trigger position-static">
+                                    <div class="text-center">
+                                        <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                            <svg class="svg-inline--fa fa-ellipsis fs-10" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M120 256C120 286.9 94.93 312 64 312C33.07 312 8 286.9 8 256C8 225.1 33.07 200 64 200C94.93 200 120 225.1 120 256zM280 256C280 286.9 254.9 312 224 312C193.1 312 168 286.9 168 256C168 225.1 193.1 200 224 200C254.9 200 280 225.1 280 256zM328 256C328 225.1 353.1 200 384 200C414.9 200 440 225.1 440 256C440 286.9 414.9 312 384 312C353.1 312 328 286.9 328 256z"></path></svg>
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-end py-2">
+                                            <a class="dropdown-item text-warning" href="{% url 'company_detail' company_id=company.id company_slug=company.slug %}"><span data-feather="eye"></span>  Détail</a>
+                                            <a class="dropdown-item text-primary" href="{% url 'company_update' company_id=company.id company_slug=company.slug %}"><span data-feather="edit"></span>  Modifier</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ company.id }}" href="#"><strong><span data-feather="delete"></span>  Supprimer</strong></a>
+                                        </div>
+                                    </div>    
+
+                                    <!-- Modal DELETE -->
+                                    <div class="modal fade" id="deleteModal{{ company.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ company.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered"> 
+                                            <div class="modal-content" style="max-width: 600px;"> 
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel{{ company.id }}">SUPPRESSION</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body" style="text-align: left;">
+                                                    <h5>Êtes-vous sûr de vouloir supprimer l'entreprise :<br><br> <span>{{ company.name }}</span> ?</h5>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                                                    <a href="{% url 'company_delete' company_id=company.id %}" class="btn btn-danger">Oui</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if not companies %}
+                <h4 class="text-center mt-5">⚠️ Pas de Liste d'Entreprises pour le moment</h4>
+            {% endif %}
+
+            <!-- Pagination Table -->
+            <div class="pagination mt-5">
+                <span class="step-links">
+                    {% if companies.has_previous %}
+                        <a href="?page=1"><span class="fas fa-chevron-left"></span><span class="fas fa-chevron-left"></span></a>
+                        <a href="?page={{ companies.previous_page_number }}"> - <span class="fas fa-chevron-left"></span></a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ companies.number }} sur {{ companies.paginator.num_pages }}.
+                    </span>
+            
+                    {% if companies.has_next %}
+                        <a href="?page={{ companies.next_page_number }}"><span class="fas fa-chevron-right"></span> - </a>
+                        <a href="?page={{ companies.paginator.num_pages }}"><span class="fas fa-chevron-right"></span><span class="fas fa-chevron-right"></span></a>
+                    {% endif %}
+                </span>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/api-sirene-company-create.js' %}"></script>
+<script src="{% static 'js/filtrage-liste.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock javascript %}
+

@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}GEFODI - Liste Membres{% endblock title%}
+
+{% block fil_ariane %} 
+    <li class="breadcrumb-item">Liste des membres</li>
+{% endblock fil_ariane %}
+
+{% block content %}
+<div class="row g-3 justify-content-between align-items-center mt-5">
+    <div class="col-md-6">
+        <h3 class="text-body mb-0" id="company_create">MEMBRES</h3>
+    </div>
+</div>
+<div class="row g-3 justify-content-between align-items-center mt-3">
+    <h2 class="col-md-3 mt-5">
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="🔍 Rechercher par page...">
+    </h2>
+    <div class="col-md-3">
+        <nav class="nav justify-content-end doc-tab-nav align-items-center" role="tablist">
+            <a class="btn btn-sm text-white preview-btn ms-2 bg-primary" 
+                hx-get="{% url 'member_create' %}" hx-target="#dialog" ><span data-feather="plus-circle"></span>  
+                Ajouter
+            </a>
+        </nav>
+    </div>
+</div>
+
+
+<div class="card shadow-none border" data-component-card="data-component-card">
+
+    <div class="card-body p-4">
+        <div id="tableList" 
+         hx-trigger="load, memberListChanged from:body" hx-get="{% url 'members_list' %}"  hx-target="this"
+        >
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>            
+        </div>
+    </div>
+</div>
+
+ <!-- Modal CREATE/UPDATE -->
+<div id="modal" class="modal fade" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
+    <div id="dialog" class="modal-dialog modal-dialog-centered" hx-target="this">
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+    <script src="{% static 'js/filtrage-liste.js' %}"></script>
+    <script src="{% static 'js/htmx/htmx.min.js' %}"></script>
+    <script src="{% static 'js/htmx/dialog.js' %}"></script>
+
+    <!-- <script>
+    $( document ).ready(function() {
+
+        $('#validUpdate').on("click", function () {
+
+            let name = $('#lastname').val();
+            let id = $('#id_user').val();
+            let firstname = $('#firstname').val();
+            let mail = $('#email').val();
+            let role = $('#role').val();
+
+            //faire des instructions pour la vérifctions des données, exemple sui ne soit pas vide
+            //Faire le traitemnt en cas d'erreur...
+            //-------------------------------------------
+            //On suppose que tout est bon
+           let csrf_token = $('[name="csrfmiddlewaretoken"]').val();
+
+           let request =  $.ajax({
+              method: "POST",
+              url: "http://127.0.0.1:8000/members/update/"+id+"/"+name,
+              data: {
+                  last_name: name,
+                  first_name: firstname,
+                  email: mail,
+                  role: role,
+                  csrfmiddlewaretoken: csrf_token,
+                  id_user: id,
+                  member_id: id
+              }
+            })
+
+            {#request.done(function( msg ) {#}
+            {#  $( "#alertMSg" ).html( msg );#}
+           // {#});#}
+            {##}
+            {#request.fail(function( jqXHR, textStatus ) {#}
+            {##}
+            {#  $( "#alertMSg" ).html(( "Request failed: " + textStatus ));#}
+            //{#});#}
+
+
+        });
+    })
+    </script> -->
+{% endblock javascript %}
+
+
+

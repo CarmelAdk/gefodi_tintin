@@ -1,0 +1,102 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-sm fs-9 mb-0">
+        <thead>
+            <tr class="table-primary">
+                <th class="sort border-top border-translucent ps-3" data-sort="last_name">NOM</th>
+                <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="first_name">PRENOM</th>
+                <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="email">EMAIL</th>
+                <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="role">ROLE</th>
+                <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="is_active">ACTIF</th>
+                <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="date_joined">REJOINT</th>
+                <th class="sort border-top border-translucent d-none d-sm-table-cell" data-sort="last_login">DERNIERE ACTIVITE</th>
+                <th class="sort text-center align-middle pe-0 border-top border-translucent" scope="col"><span class="text-primary" data-feather="settings"></span></th>
+            </tr>
+        </thead>
+        <tbody class="list">
+            {% for member in members %}
+            <tr>
+                <td class="align-middle ps-3 last_name">{{ member.last_name }}</td>
+                <td class="align-middle first_name d-none d-sm-table-cell">{{ member.first_name }}</td>
+                <td class="align-middle email d-none d-sm-table-cell">{{ member.email }}</td>
+                <td class="align-middle role d-none d-sm-table-cell">{{ member.role }}</td>
+                <td class="align-middle is_active d-none d-sm-table-cell">
+                    {% if member.is_active %}
+                        <span class="text-success px-2 py-1 rounded"><span data-feather="check-square"></span> INVITATION ACCEPTEE</span>
+                    {% else %}
+                        <span class="px-2 py-1 rounded text-warning"><span data-feather="user-plus"></span> INVITATION ENVOYEE</span>
+                    {% endif %}
+                </td>                            
+                <td class="align-middle date_joined d-none d-sm-table-cell">{{ member.date_joined }}</td>
+                <td class="align-middle last_login d-none d-sm-table-cell">
+                    {% if member.last_login %}
+                        <span>{{ member.last_login }}</span>
+                    {% else %}
+                        <span>Jamais</span>
+                    {% endif %}
+                </td>    
+                <td class="align-middle white-space-nowrap text-end pe-0">
+                    <div class="btn-reveal-trigger position-static">
+                        <div class="text-center">
+                            <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                <svg class="svg-inline--fa fa-ellipsis fs-10" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M120 256C120 286.9 94.93 312 64 312C33.07 312 8 286.9 8 256C8 225.1 33.07 200 64 200C94.93 200 120 225.1 120 256zM280 256C280 286.9 254.9 312 224 312C193.1 312 168 286.9 168 256C168 225.1 193.1 200 224 200C254.9 200 280 225.1 280 256zM328 256C328 225.1 353.1 200 384 200C414.9 200 440 225.1 440 256C440 286.9 414.9 312 384 312C353.1 312 328 286.9 328 256z"></path></svg>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-end py-2">
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ member.id }}" href="#"><strong><span data-feather="delete"></span> Supprimer</strong></button>
+                                <button class="dropdown-item text-secondary" 
+                                    hx-get="{% url 'member_update' member_id=member.pk %}" hx-target="#dialog"
+                                ><strong><span data-feather="edit"></span> Modifier</strong></button>
+                            </div>
+                        </div>    
+
+                        <!-- Modal DELETE -->
+                        <div class="modal fade" id="deleteModal{{ member.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ member.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered"> 
+                                <div class="modal-content" style="max-width: 600px;"> 
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ member.id }}">SUPPRESSION</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" style="text-align: left;">
+                                        <h5>Êtes-vous sûr de vouloir supprimer l'utilisateur :<br><br> <span>{{ member.last_name }}</span> ?</h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                                        <a href="{% url 'member_delete' member_id=member.id %}" class="btn btn-danger">Oui</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if not members %}
+    <h4 class="text-center mt-5">⚠️ Pas de membre pour le moment.</h4>
+{% endif %}
+
+{% if members.paginator.num_pages > 1 %}
+    <!-- Pagination Table -->
+    <div class="pagination mt-5">
+        <span class="step-links">
+            {% if members.has_previous %}
+                <a href="?page=1"><span class="fas fa-chevron-left"></span><span class="fas fa-chevron-left"></span></a>
+                <a href="?page={{ members.previous_page_number }}"> - <span class="fas fa-chevron-left"></span></a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ members.number }} sur {{ members.paginator.num_pages }}.
+            </span>
+    
+            {% if members.has_next %}
+                <a href="?page={{ members.next_page_number }}"><span class="fas fa-chevron-right"></span> - </a>
+                <a href="?page={{ members.paginator.num_pages }}"><span class="fas fa-chevron-right"></span><span class="fas fa-chevron-right"></span></a>
+            {% endif %}
+        </span>
+    </div>
+{% endif %}

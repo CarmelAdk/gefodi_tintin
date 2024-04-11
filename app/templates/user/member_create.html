@@ -1,0 +1,90 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<form hx-post="{% url 'member_create' %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="createModalLabel">Ajouter un membre</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body" style="text-align: left;">
+        <div class="row">
+            <div class="col-md-6 mt-3">
+                <span class="text-danger">* </span>{{ form.last_name.label_tag }}
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <div class="text-danger">
+                        {% for error in form.last_name.errors %}
+                            <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mt-3">
+                <span class="text-danger">* </span>{{ form.first_name.label_tag }}
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <div class="text-danger">
+                        {% for error in form.first_name.errors %}
+                            <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mt-3">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger">
+                        {% for error in form.email.errors %}
+                            <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mt-3">
+                <span class="text-danger">* </span>{{ form.role.label_tag }}
+                {{ form.role }}
+                {% if form.role.errors %}
+                    <div class="text-danger">
+                        {% for error in form.role.errors %}
+                            <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        Annuler
+      </button>
+      <button type="submit" class="btn btn-primary">Ajouter</button>
+    </div>
+</form>
+{% endwith %}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('member-form');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('input', function() {
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            let isFormValid = true;
+
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    isFormValid = false;
+                }
+            });
+
+            if (isFormValid) {
+                submitButton.removeAttribute('disabled');
+            } else {
+                submitButton.setAttribute('disabled', 'disabled');
+            }
+        });
+    });
+</script>

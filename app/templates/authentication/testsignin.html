@@ -1,0 +1,49 @@
+{% extends "login_layout.html" %}
+{% load static %}
+
+{% block content %}
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+      <div class="container">
+        <div class="row flex-center min-vh-100 py-5">
+          <div class="col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-3"><a class="d-flex flex-center text-decoration-none mb-4" href="{% url 'home' %}">
+              <div class="d-flex align-items-center fw-bolder fs-3 d-inline-block"><img src="{% static 'images/icons/logo.png' %}" alt="phoenix" width="58" />
+              </div>
+            </a>
+            <div class="text-center mb-6">
+              <h4 class="text-body-highlight">Réinitialiser votre mot de passe</h4>
+              <p class="text-body-tertiary">Tapez votre nouveau mot de passe</p>
+              <form class="mt-5">
+                <input class="form-control mb-2" id="password" type="password" placeholder="Type new password" />
+                <input class="form-control mb-4" id="confirmPassword" type="password" placeholder="Cofirm new password" />
+                <button class="btn btn-primary w-100" type="submit">Définir le mot de passe</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+
+</html>
+
+{% endblock %}
+
+
+{% comment %} {% extends 'login_layout.html' %}
+{% block content %}
+    <p>{{ message }}</p>
+    <form method="post">
+        {{ form.username.label }}
+        {{ form.username }}
+        {{ form.password.label }}
+        {{ form.password }}
+        <button type="submit" >Se connecter</button>
+    </form>
+    <p>Pas encore membre ? <a href="{% url 'signup' %}">Inscrivez-vous maintenant !</a></p>
+{% endblock content %} {% endcomment %}

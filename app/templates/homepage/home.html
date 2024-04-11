@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block title %}Tableau de bord{% endblock %}
+{% block content %}
+
+    <p>Bonjour, {{ request.user.username }}! Vous êtes connecté en tant que {{ request.user.role.name }}. </p>
+    
+    {% if request.user.role.name == 'SUPERUSER' %}
+        <a href=""> + Ajouter un utilisateur</a>
+    {% endif %}
+        
+    {% if request.user.role.name == 'SUPERUSER' or request.user.role.name == 'ADMIN' or request.user.role.name == 'MANAGER' %}
+    <p>Vous avez accès à la table</p>
+    
+    <table border="1">
+        <title>Utilisateurs</title>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Actions</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>
+                <a href="">Informations</a> | 
+                
+                {% if request.user.role.name != 'MANAGER' %}
+                <a href="">Modifier</a> | 
+                <a href="">Supprimer</a>
+                {% endif %}
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>Vous n'avez pas la permission d'afficher cette table.</p>
+    {% endif %}
+
+    <p>Voulez-vous <a href="">changer votre mot de passe ?</a></p>
+{% endblock content %}

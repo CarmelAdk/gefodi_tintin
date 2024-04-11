@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}GEFODI - Modification Entreprise{% endblock title%}
+
+{% block fil_ariane %} 
+  <li class="breadcrumb-item"><a href="{% url 'company_list' %}">Liste des entreprises</a></li>
+  <li class="breadcrumb-item">Modifier une entreprise</li>
+{% endblock fil_ariane %}
+
+{% block content %}
+<div class="row g-3 justify-content-between align-items-center mt-5 mb-3">
+    <div class="col-md-6">
+        <h3 class="text-body mb-0" id="company_update">MODIFIER UNE ENTREPRISE</h3>
+    </div>
+    <div class="col-md-3">
+        <nav class="nav justify-content-end doc-tab-nav align-items-center" role="tablist">
+            <a class="btn btn-sm text-white preview-btn ms-2 bg-secondary" href="{% url 'company_list' %}">
+                <span data-feather="list"></span>  Voir la liste
+            </a>
+        </nav>
+    </div>
+</div>
+
+<div class="card shadow-none border my-4" data-component-card="data-component-card">
+    <div class="card-body p-4">
+        <form method="post" id="entreprise-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="siren-input">Entrez le SIREN :</label>
+                    <input type="text" class="form-control" id="siren-input" maxlength="9" oninput="this.value = this.value.replace(/\D/g, '')">
+                    <small class="form-text text-muted" style="color: #E5780B !important">ENTREZ VOTRE SIREN POUR PRÉREMPLIR CERTAINS CHAMPS.</small>
+                    <div id="siret-list"></div>
+                </div>  
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 mt-5">
+                    <span class="text-danger">* </span>{{ form.name.label_tag }}
+                    {{ form.name }}
+                </div>
+                <div class="col-md-3 mt-5">
+                    {{ form.acronym.label_tag }}
+                    {{ form.acronym }}
+                </div> 
+                <div class="col-md-6 mt-5">
+                    <span class="text-danger">* </span>{{ form.address.label_tag }}
+                    {{ form.address }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 mt-5">
+                    <span class="text-danger">* </span>{{ form.naf_ape.label_tag }}
+                    {{ form.naf_ape }}
+                </div>                
+                <div class="col-md-3 mt-5">
+                    <span class="text-danger">* </span>{{ form.siret.label_tag }}
+                    {{ form.siret }}
+                    {% for error in form.siret.errors %}
+                        <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-6 mt-5">
+                    {{ form.logotype.label_tag }}
+                    <input type="file" name="{{ form.logotype.name }}" id="logotype" class="form-control" placeholder="Logotype" accept=".jpg, .jpeg, .png, .gif">
+                    {% for error in form.logotype.errors %}
+                        <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 mt-5">
+                    <span class="text-danger">* </span>{{ form.capital.label_tag }}
+                    {{ form.capital }}
+                    {% for error in form.capital.errors %}
+                        <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                    {% endfor %}
+                </div>   
+                <div class="col-md-3 mt-5">
+                    <span class="text-danger">* </span>{{ form.status.label_tag }}
+                    {{ form.status }}
+                </div>
+                <div class="col-md-6 mt-5">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {% for error in form.email.errors %}
+                        <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 mt-5">
+                    <span class="text-danger">* </span>{{ form.nb_employees.label_tag }}
+                    {{ form.nb_employees }}
+                    {% for error in form.nb_employees.errors %}
+                        <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-3 mt-5">
+                    {{ form.fax.label_tag }}
+                    {{ form.fax }}
+                    {% for error in form.fax.errors %}
+                        <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                    {% endfor %}
+                </div>  
+                <div class="col-md-6 mt-5">
+                    {{ form.phone.label_tag }}
+                    {{ form.phone }}
+                    {% for error in form.phone.errors %}
+                        <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                    {% endfor %}
+                </div> 
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary mt-5"><span data-feather="edit"></span>  Modifier</button>
+                <a href="javascript:history.back()" class="btn btn-secondary mt-5"><span data-feather="arrow-left-circle"></span>  Retour</a>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
+{% block javascript %}
+    <script src="{% static 'js/api-sirene-company-create.js' %}"></script>
+{% endblock javascript %}

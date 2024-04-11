@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}GEFODI - Ajouter un membre{% endblock title%}
+
+{% block fil_ariane %} 
+    <li class="breadcrumb-item"><a href="{% url 'members_list' %}">Liste des membres</a></li>
+    <li class="breadcrumb-item">Ajouter un membre</li>
+{% endblock fil_ariane %}
+
+{% block content %}
+<div class="container h-100">
+    <div class="row align-items-center justify-content-center h-100">
+        <div class="col-lg-6 mt-5">
+            <div class="card shadow-none border my-4" data-component-card="data-component-card">
+                <div class="card-header p-4 border-bottom bg-body">
+                    <div class="row g-3 justify-content-between align-items-center">
+                        <div class="col-12 col-md">
+                            <h2 class="mb-0 text-body" id="company_create"><span class="fas fa-users"></span> Ajouter Membre</h2>
+                        </div>
+                        <div class="col col-md-auto">
+                            <nav class="nav justify-content-end doc-tab-nav align-items-center" role="tablist">
+                            <a class="btn btn-sm btn-phoenix-warning preview-btn ms-2" href="{% url 'members_list' %}">
+                                <span data-feather="list"></span>  Voir la liste
+                            </a></nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row align-items-center justify-content-between g-3 mb-4">
+                        <div class="col-auto"></div>
+                        <div class="g-3 mb-6">
+                            <div class="col-12 col-lg-12">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="border-bottom border-dashed">
+                                        </div>
+                                        <div class="border-bottom border-dashed pb-4">
+                                            <form method="post" id="member-form">
+                                                {% csrf_token %}
+
+                                                <div class="row">
+                                                    <div class="col-md-6 mt-3">
+                                                        <span class="text-danger">* </span>{{ form.last_name.label_tag }}
+                                                        {{ form.last_name }}
+                                                        {% if form.last_name.errors %}
+                                                            <div class="text-danger">
+                                                                {% for error in form.last_name.errors %}
+                                                                    <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="col-md-6 mt-3">
+                                                        <span class="text-danger">* </span>{{ form.first_name.label_tag }}
+                                                        {{ form.first_name }}
+                                                        {% if form.first_name.errors %}
+                                                            <div class="text-danger">
+                                                                {% for error in form.first_name.errors %}
+                                                                    <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mt-3">
+                                                        {{ form.email.label_tag }}
+                                                        {{ form.email }}
+                                                        {% if form.email.errors %}
+                                                            <div class="text-danger">
+                                                                {% for error in form.email.errors %}
+                                                                    <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="col-md-6 mt-3">
+                                                        <span class="text-danger">* </span>{{ form.role.label_tag }}
+                                                        {{ form.role }}
+                                                        {% if form.role.errors %}
+                                                            <div class="text-danger">
+                                                                {% for error in form.role.errors %}
+                                                                    <div class="text-danger"><span class='fab fa-adobe form-icon fs-14'></span> {{ error|safe }}</div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <div></div>
+                                                    <button type="submit" class="btn btn-primary mt-5" id="submit-button" disabled>Enregistrer</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('member-form');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('input', function() {
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            let isFormValid = true;
+
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    isFormValid = false;
+                }
+            });
+
+            if (isFormValid) {
+                submitButton.removeAttribute('disabled');
+            } else {
+                submitButton.setAttribute('disabled', 'disabled');
+            }
+        });
+    });
+</script>
+{% endblock %}

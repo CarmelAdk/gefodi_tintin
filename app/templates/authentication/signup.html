@@ -1,0 +1,199 @@
+{% extends "login_layout.html" %}
+{% load static %}
+{% block title %}GEFODI - S'inscrire{% endblock %}
+{% block content %}
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <div class="container">
+        <div class="row flex-center min-vh-100 py-5">
+            <div class="col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-3"><a
+                    class="d-flex flex-center text-decoration-none mb-4" href="{% url 'login' %}">
+                    <div class="d-flex align-items-center fw-bolder fs-3 d-inline-block"><img
+                            src="{% static 'images/icons/logo-gefodi.png' %}" alt="gefodi" width="150" />
+                    </div>
+                </a>
+                <div class="text-center mb-7">
+                    <h3 class="text-body-highlight">S'inscrire</h3>
+                    <p class="text-body-tertiary">Créez votre compte aujourd'hui</p>
+                </div>
+                <button class="btn btn-phoenix-secondary w-100 mb-3"><span
+                        class="fab fa-google text-danger me-2 fs-9"></span>S'inscrire avec google</button>
+                <button class="btn btn-phoenix-secondary w-100"><span
+                        class="fab fa-facebook text-primary me-2 fs-9"></span>S'inscrire avec facebook</button>
+                <div class="position-relative mt-4">
+                    <hr class="bg-body-secondary" />
+                    <div class="divider-content-center">ou utilisez un e-mail</div>
+                </div>
+
+                {% if form.errors %}
+                <div class="alert alert-warning text-justify" role="alert">
+                    {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                    <span class="fab fa-adobe form-icon fs-14"></span>
+                    {{ error }}
+                    <br>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {% comment %} <div class="mb-3 text-start">
+                        <label class="form-label" for="username"><span class="text-danger">*</span></label>
+                        {{ form.username.label }}
+
+                        {{form.username}}
+
+                        {% if form.errors.username %}
+                        {% for error in form.errors.username %}
+                        <div class="text-justify" style="color: #ec1f00; font-size: 12px;">
+                            <span class="fab fa-adobe form-icon fs-12"></span>
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <div class="invalid-feedback"><span class="fab fa-adobe form-icon fs-14"></span> Le champ doit
+                            comporter au moins 3 caractères.</div>
+
+                    </div> {% endcomment %}
+
+                    <div class="mb-3 text-start">
+                        <label class="" for="last_name"><span class="text-danger">*</span></label>
+                        {{ form.last_name.label }}
+                        {{form.last_name}}
+                        <div class="invalid-feedback"><span class="fab fa-adobe form-icon fs-14"></span> Ce champ doit
+                            contenir au moins 2 caractères et peut contenir uniquement de chaines de caractères.</div>
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label class="" for="first_name"><span class="text-danger">*</span></label>
+                        {{ form.first_name.label }}
+                        {{ form.first_name }}
+                        <div class="invalid-feedback"><span class="fab fa-adobe form-icon fs-14"></span> Ce champ doit
+                            contenir au moins 2 caractères et peut contenir uniquement de chaines de caractères.</div>
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label class="" for="email"><span class="text-danger">*</span></label>
+                        {{ form.email.label }}
+                        {{ form.email }}
+                        <div class="invalid-feedback"><span class="fab fa-adobe form-icon fs-14"></span> Le format de
+                            l'adresse e-mail n'est pas valide. Veuillez saisir une adresse e-mail conforme, par exemple
+                            : nom@example.com</div>
+                        {% if form.errors.email %}
+                        {% for error in form.errors.email %}
+                        <div class="text-justify" style="color: #ec1f00; font-size: 12px;">
+                            <span class="fab fa-adobe form-icon fs-12"></span>
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="" for="password"><span class="text-danger">*</span></label>
+                            {{ form.password1.label }}
+                            {{ form.password1 }}
+                            {% if form.errors.password2 %}
+                            {% for error in form.errors.password2 %}
+                            <div class="text-justify" style="color: #ec1f00; font-size: 12px;">
+                                <span class="fab fa-adobe form-icon fs-12"></span>
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            <div class="invalid-feedback text-justify"><span
+                                    class="fab fa-adobe form-icon fs-14"></span> Le mot de
+                                passe doit contenir 8 caractères minimum, au moins une
+                                lettre majuscule, une lettre minuscule, un chiffre, un caractère spécial (
+                                @, #, $ etc.).</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="" for="confirmPassword"><span class="text-danger">*</span></label>
+                            {{ form.password2.label }}
+                            {{ form.password2 }}
+                            {% if form.errors.password2 %}
+                            {% for error in form.errors.password2 %}
+                            <div class="text-justify" style="color: #ec1f00; font-size: 12px;">
+                                <span class="fab fa-adobe form-icon fs-12"></span>
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            <div id="passwordError" class="text-justify" style="color: #ec1f00; font-size: 12px;"></div>
+                        </div>
+                    </div>
+                    <div class="form-check mb-3">
+                        {{ form.cgu_rgpd }}
+                        <label class="fs-12 text-transform-none" for="termsService"><span
+                                class="text-danger">*</span></label> J'accepte les <a href="#!">conditions </a>et la
+                        <a href="#!">politique de confidentialité</a></label>
+                        <div class="invalid-feedback"><span class="fab fa-adobe form-icon fs-14"></span> Vous devez
+                            accepter les conditions et la politique de confidentialité.
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-100 mb-3" id="signup-btn" disabled>S'inscrire</button>
+                    <div class="text-center"><a class="fs-9 fw-bold" href="{% url 'login' %}">Connectez-vous à un compte
+                            existant</a>
+                    </div>
+
+                    <div id="recaptcha"></div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_public_key }}"></script>
+<script> var recaptcha_public_key = "{{ recaptcha_public_key }}"; </script>
+<script src="{% static 'js/recaptcha.js' %}"></script>
+
+<script>
+    // Enable/disable the button based on form field content
+    $(document).ready(function () {
+        $('input, select').on('input', function () {
+            var formIsEmpty = $('form').find('input, select').filter(function () {
+                return $.trim(this.value) === '';
+            }).length > 0;
+
+            // Check the checkbox state
+            var checkboxChecked = $('#termsService').prop('checked');
+
+            // Enable/disable the button based on conditions
+            $('#signup-btn').prop('disabled', formIsEmpty || !checkboxChecked);
+        });
+
+        // Handle initial state on page load
+        $(window).on('load', function () {
+            // Trigger input event to check the initial state
+            $('input, select').trigger('input');
+        });
+    });
+</script>
+
+<script>
+    $('#confirmPassword').on('input', function () {
+        var password = $('#password').val();
+        var confirmPassword = $(this).val();
+
+        if (password !== confirmPassword) {
+            $('#passwordError').html(
+                '<span class="fab fa-adobe form-icon fs-12"></span> Les mots de passe ne correspondent pas.'
+            );
+            $('#signup-btn').attr("disabled", true);
+        } else {
+            $('#passwordError').text('');
+            $('#signup-btn').attr("disabled", false);
+        }
+    });
+</script>
+
+{% endblock javascript %}
