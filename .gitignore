@@ -1,0 +1,8 @@
+__pycache__ 
+.venv  
+db.sqlite3  
+.idea
+app/migrations
+static/logotypes
+.env*
+gefodi_v2/vert
